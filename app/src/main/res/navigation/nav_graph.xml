@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/locationListFragment">
+
+    <fragment
+        android:id="@+id/locationListFragment"
+        android:name="com.example.canary.LocationListFragment"
+        android:label="Location List"
+        tools:layout="@layout/fragment_location_list">
+        <action
+            android:id="@+id/action_locationList_to_locationMap"
+            app:destination="@id/locationMapFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/locationMapFragment"
+        android:name="com.example.canary.LocationMapFragment"
+        android:label="Location Map"
+        tools:layout="@layout/fragment_location_map">
+        <argument
+            android:name="locationId"
+            app:argType="integer" />
+    </fragment>
+
+</navigation>
