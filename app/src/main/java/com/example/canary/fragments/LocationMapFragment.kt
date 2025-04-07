@@ -31,6 +31,8 @@ class LocationMapFragment : Fragment() {
             locationId = it.getInt("locationId", 1890)
             sublocationId = it.getInt("sublocationId", -1)
         }
+
+        Log.d("Navigine", "LocationMapFragment onCreate with locationId: $locationId")
     }
 
     override fun onCreateView(
@@ -52,6 +54,9 @@ class LocationMapFragment : Fragment() {
 
     private fun loadLocation() {
         try {
+            // First clean up any existing listeners
+            cleanupListeners()
+
             val locationManager = NavigineSdkManager.locationManager
 
             // Add location listener
@@ -60,6 +65,9 @@ class LocationMapFragment : Fragment() {
                     activity?.runOnUiThread {
                         // Get location view controller
                         val controller = locationView.locationWindow
+
+                        // Instead of reset, we'll set the location ID to ensure fresh loading
+                        Log.d("Navigine", "Location loaded, applying sublocation settings")
 
                         // Set sublocation ID (either from arguments or default to first)
                         if (sublocationId != -1) {
@@ -91,10 +99,12 @@ class LocationMapFragment : Fragment() {
             // Add the listener
             locationManager.addLocationListener(locationListener)
 
-            // Set location ID to load
+            // Set location ID to load - this will trigger a fresh location load
+            Log.d("Navigine", "Loading location with ID: $locationId")
             locationManager.locationId = locationId
         } catch (e: Exception) {
             Log.e("Navigine", "Error loading location: ${e.message}")
+            e.printStackTrace()
         }
     }
 
@@ -127,21 +137,22 @@ class LocationMapFragment : Fragment() {
             navigationManager.startLogRecording()
         } catch (e: Exception) {
             Log.e("Navigine", "Error starting navigation: ${e.message}")
+            e.printStackTrace()
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-
+    private fun cleanupListeners() {
         try {
             // Remove position listener
             positionListener?.let {
                 NavigineSdkManager.navigationManager.removePositionListener(it)
+                positionListener = null
             }
 
             // Remove location listener
             locationListener?.let {
                 NavigineSdkManager.locationManager.removeLocationListener(it)
+                locationListener = null
             }
 
             // Stop navigation
@@ -149,5 +160,15 @@ class LocationMapFragment : Fragment() {
         } catch (e: Exception) {
             Log.e("Navigine", "Error cleaning up: ${e.message}")
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        cleanupListeners()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        cleanupListeners()
     }
 }
