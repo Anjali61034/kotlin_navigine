@@ -26,11 +26,13 @@ object NavigineSdkManager {
         // Initialize Navigine SDK
         Navigine.initialize(context)
 
+        // Get SDK instance
+        mNavigineSdk = NavigineSdk.getInstance()
+
         // Configure SDK
         mNavigineSdk.setUserHash(mUserHash); // your user hash from the server
         mNavigineSdk.setServer(mLocationServer);
 
-        // Get SDK instance
-        mNavigineSdk = NavigineSdk.getInstance()
+
     }
 }
