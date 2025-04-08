@@ -5,8 +5,11 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import com.navigine.idl.java.Location
 import com.navigine.idl.java.LocationListener
 import com.navigine.idl.java.Position
@@ -18,6 +21,7 @@ class LocationMapFragment : Fragment() {
     private lateinit var locationView: LocationView
     private var locationId: Int = 1890
     private var sublocationId: Int = -1
+    private lateinit var navController: NavController
 
     // Store listeners for proper cleanup
     private var locationListener: LocationListener? = null
@@ -40,16 +44,61 @@ class LocationMapFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_location_map, container, false)
+        // Inflate with the existing layout
+        val view = inflater.inflate(R.layout.fragment_location_map, container, false)
+
+        // Check if a back button already exists in the layout, if not, we'll add one programmatically
+        val backButton = view.findViewById<Button>(R.id.back_button)
+        if (backButton == null) {
+            // Create a back button programmatically
+            val newBackButton = Button(requireContext())
+            newBackButton.id = View.generateViewId()
+            newBackButton.text = "Back"
+
+            // Style the button as needed
+            newBackButton.setBackgroundResource(android.R.drawable.ic_menu_revert)
+
+            // Add it to an appropriate parent in your layout
+            val parentView = view as? ViewGroup
+            parentView?.addView(newBackButton, 0) // Add at top
+
+            // Set click listener
+            newBackButton.setOnClickListener {
+                goBack()
+            }
+        } else {
+            // Use the existing back button
+            backButton.setOnClickListener {
+                goBack()
+            }
+        }
+
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         locationView = view.findViewById(R.id.location_view)
+        navController = Navigation.findNavController(view)
 
         // Load the selected location
         loadLocation()
+    }
+
+    private fun goBack() {
+        Log.d("Navigine", "Custom back button pressed")
+        try {
+            // First try normal back stack navigation
+            if (!navController.popBackStack()) {
+                // If that doesn't work, navigate directly to LocationListFragment
+                navController.navigate(R.id.locationListFragment)
+            }
+        } catch (e: Exception) {
+            Log.e("Navigine", "Error navigating back: ${e.message}")
+            // Last resort - use FragmentManager directly
+            requireActivity().supportFragmentManager.popBackStack()
+        }
     }
 
     private fun loadLocation() {
@@ -170,5 +219,19 @@ class LocationMapFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         cleanupListeners()
+    }
+
+    // Override back button press
+    override fun onResume() {
+        super.onResume()
+        // Add a callback for the hardware back button
+        requireActivity().onBackPressedDispatcher.addCallback(
+            viewLifecycleOwner,
+            object : androidx.activity.OnBackPressedCallback(true) {
+                override fun handleOnBackPressed() {
+                    goBack()
+                }
+            }
+        )
     }
 }
