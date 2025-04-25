@@ -23,28 +23,37 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    buildFeatures {
+        viewBinding true
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_11
         targetCompatibility JavaVersion.VERSION_11
     }
+
     kotlinOptions {
         jvmTarget = '11'
     }
 }
 
 dependencies {
-
     implementation libs.androidx.core.ktx
     implementation fileTree(includes: ['*.jar','*.aar'], dir: 'libs')
     implementation libs.androidx.appcompat
     implementation libs.material
-    implementation "androidx.lifecycle:lifecycle-process:2.6.2"  // For ProcessLifecycleOwner
-    implementation "androidx.navigation:navigation-fragment-ktx:2.7.0"  // For Navigation components
+    implementation "androidx.lifecycle:lifecycle-process:2.6.2"
+    implementation "androidx.navigation:navigation-fragment-ktx:2.7.0"
     implementation "androidx.navigation:navigation-ui-ktx:2.7.0"
     implementation libs.androidx.activity
     implementation libs.androidx.constraintlayout
     implementation libs.androidx.navigation.fragment.ktx
     implementation libs.androidx.navigation.ui.ktx
+
+    // ✅ Added for FusedLocationProviderClient and LocationServices
+    implementation 'com.google.android.gms:play-services-location:21.0.1'
+
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit
     androidTestImplementation libs.androidx.espresso.core

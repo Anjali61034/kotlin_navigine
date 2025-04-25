@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.textview.MaterialTextView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="72dp"
+    android:textSize="24sp"
+    android:textAlignment="center"
+    android:gravity="center"
+    android:background="@drawable/sublocation_item_background"
+    android:textColor="@android:color/white"/>
