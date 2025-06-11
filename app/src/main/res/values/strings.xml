@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Canary</string>
+    <string name="navigation_service_name"> Service</string>
 </resources>
