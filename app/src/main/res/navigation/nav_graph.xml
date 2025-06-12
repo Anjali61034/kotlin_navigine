@@ -14,6 +14,11 @@
             android:id="@+id/action_locationList_to_locationMap"
             app:destination="@id/locationMapFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/eddystoneDetectionFragment"
+        android:name="com.example.canary.fragments.EddystoneDetectionFragment"
+        android:label="Eddystone Detection"
+        tools:layout="@layout/fragment_eddystone_detection" />
 
     <fragment
         android:id="@+id/locationMapFragment"

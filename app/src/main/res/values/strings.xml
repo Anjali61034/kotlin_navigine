@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Canary</string>
     <string name="navigation_service_name"> Service</string>
+    <string name="debug_copy_list_content">List content copied</string>
 </resources>
