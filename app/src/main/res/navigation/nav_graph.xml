@@ -17,7 +17,7 @@
 
     <fragment
         android:id="@+id/locationMapFragment"
-        android:name="com.example.canary.LocationMapFragment"
+        android:name="com.example.canary.fragments.LocationMapFragment"
         android:label="Location Map"
         tools:layout="@layout/fragment_location_map">
         <argument
